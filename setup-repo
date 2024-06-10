@@ -53,10 +53,6 @@ elif command_exists apt || command_exists apt-get ; then
 
 fi
 
-port=8000
-
-read "input the port ( default:8000): " port
-
 python3 -m http.server port
 
 # get the repo url
