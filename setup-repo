@@ -53,13 +53,13 @@ elif command_exists apt || command_exists apt-get ; then
 
 fi
 
-python3 -m http.server port
+python3 -m http.server
 
 # get the repo url
 
 ip_address=$(hostname -I | awk '{print $1}')
 
-echo "Your repo url: http://$ip_address:$port"
+echo "Your repo url: http://$ip_address:8000"
 
 
 
