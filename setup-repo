@@ -35,11 +35,15 @@ fi
 
 # Check if a directory exists and create it if it doesn't
 
-REPO="repo"
+REPO="repo-rpms"
 
 if [ ! -d "$REPO" ]; then
     echo "Directory $REPO does not exist. Creating it..."
     git clone https://github.com/ChrisBale11/repo.git -b v.0.1
+    rm -rf $REPO
+    mkdir $REPO
+    cp repo/*rpm $REPO
+    
 else
     echo "Directory $REPO already exists."
 fi
