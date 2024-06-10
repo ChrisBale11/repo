@@ -1,0 +1,82 @@
+#!/bin/bash
+
+package_manager=("dnf" "apt" "apt-get")
+
+install_tools() {
+    echo "Package manager is $1"
+
+    echo "Installing Createrepo with $1..."
+
+    if [ "$1" == "${package_manager[1]}" ] || [ "$1" == "${package_manager[2]}" ]; then
+        sudo $1 install -y createrepo-c
+    else
+        sudo $1 install -y createrepo
+    fi
+    
+    echo "Installing Python 3 with $1..."
+    sudo $1 install -y python3
+}
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+
+if command_exists dnf; then
+    install_tools "${package_manager[0]}"
+elif command_exists apt; then
+    install_tools "${package_manager[1]}"
+elif command_exists apt-get; then
+    install_tools "${package_manager[2]}"
+else
+    echo "No known package manager found"
+fi
+
+# Check if a directory exists and create it if it doesn't
+
+REPO="repo"
+
+if [ ! -d "$REPO" ]; then
+    echo "Directory $REPO does not exist. Creating it..."
+    git clone https://github.com/ChrisBale11/repo.git -b v.0.1
+else
+    echo "Directory $REPO already exists."
+fi
+
+cd $REPO
+
+if command_exists dnf; then 
+    createrepo .
+elif command_exists apt || command_exists apt-get ; then 
+    createrepo_c .
+
+fi
+
+port=8000
+
+read "input the port ( default:8000): " port
+
+python3 -m http.server port
+
+# get the repo url
+
+ip_address=$(hostname -I | awk '{print $1}')
+
+echo "Your repo url: http://$ip_address:$port"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
