@@ -21,6 +21,7 @@ rpmbuild/
 1. building a source RPM
 2. building a binary RPM
 
+In this case, I will guidance on how to build a binary RPM
 
 **step 1**: prepare the source code and then put them in tarball under form: <name>-<version>.tar.gz 
 
@@ -34,8 +35,12 @@ $ rpmdev-newspec <spec-name>
 
 <spec-name>.spec created; type minimal, rpm version >= 4.16.
 
+**step 3** : build rpms
+
+$ rpmbuild -bb <spec-name>.spec
+
 ======================================================================================================================================
-                                                         SPEC FILE STRUCTURE      
++                                                         SPEC FILE STRUCTURE                                                        +
 ======================================================================================================================================                                     This is basic structure.                                                                 
 -----------------
 Metadata section:
@@ -74,9 +79,11 @@ Advanced items section:
 The specfile can contains other advanced items. we will discuss them later
 
 
-In additon, you can use the macro in the spec file
-
 ======================================================================================================================================
+
+======================================================================================
++        In additon, you can use the followwing macros in the spec file              +
+======================================================================================
 
 Macro	             Default Value	        Description	
 %_prefix	        /usr	                The base installation prefix	
@@ -95,7 +102,17 @@ Macro	             Default Value	        Description
 %_mandir	        %{_datadir}/man	        Directory for manual pages	
 
 ======================================================================================
-Spec file for Bash script
+
+======================================================================================
++                     These are examples for building RPMS                           +
+======================================================================================
+Build rpms for a Bash script:
+
+$ cd rpmbuild/SPECS
+
+$ rpmdev-newspec <spec-name>      # create specfile template
+
+Adjust the specfile like the following:
 
 hello.spec
 --------------------------------------------------------
@@ -129,28 +146,28 @@ install -m 755 hello.sh %{buildroot}/usr/bin/hello
 %changelog
 # let's skip this for now
 -----------------------------------------------------
-Put the script in rpmbuild/SPECS/hello.spec
-
-$ cd rpmbuild/SPECS/
+Start the build:
 
 $ rpmbuild -bb hello.spec
 
 Check the newly built rpms in rpmbuild/RPMS/<arch>/hello-1-1.<arch>.rpms
 
-=====================================================================================
-
-Build rpms for a python program
+======================================================================================
+Build rpms for a Python program
 
 1. Prepare the source
 quiz-game-0.1
 ├── LICENSE
 └── quiz-game.py
 
+
 2. Create  the tarball from the source and then put it in rpmbuild/SOURCE
 
 $ tar quiz-game-0.1.tar.gz quiz-game-0.1/
  
 $ mv quiz-game-0.1.tar.gz rpmbuild/SOURCES
+
+
 
 3. Create spec file using rpmdevtools
 
@@ -203,12 +220,14 @@ install -m 0644 %{name}.py %{buildroot}/usr/lib/%{name}/
 ----------------------------------------------------------------------
 
 
+
 4. Build the packges
 
 $ pwd
 rpmbuild/SPECS
 
 $ rpmbuild -bb quiz-game.spec
+
 
 5. Check the output
 
@@ -225,17 +244,20 @@ $ quiz-game
 =====================================================================================
 Build package for a C program
 
+
 1. Prepare the source
 sysinfo-0.1
 ├── LICENSE
 ├── makefile
 └── sysinfo.c
 
+
 2. Create  the tarball from the source and then put it in rpmbuild/SOURCE
 
 $ tar sysinfo-0.1.tar.gz sysinfo-0.1/
  
 $ mv sysinfo-0.1.tar.gz rpmbuild/SOURCES
+
 
 3. Create spec file using rpmdevtools
 
@@ -274,16 +296,15 @@ make %{?_smp_mflags}
 - First getting system information package
 -------------------------------------------------------------
 
-4. Build the packges
+
+4. Build the package
 
 $ pwd
 rpmbuild/SPECS
 
 $ rpmbuild -bb sysinfo.spec
 
+
 5. Check the output
 
 The newly built package was put in rpmbuild/RPMS/x86_64/sysinfo-0.1-1.el9.noarch.rpm
-
-
-
